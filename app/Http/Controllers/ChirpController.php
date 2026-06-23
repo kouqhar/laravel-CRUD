@@ -66,7 +66,9 @@ class ChirpController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $foundChirp = Chirp::find($id);
+
+        return view('chirps.edit', ['chirp' => $foundChirp]);
     }
 
     /**
@@ -86,7 +88,7 @@ class ChirpController extends Controller
             'message' => $validated['message'],
         ]);
 
-        return redirect('/')->with('success', 'Chirp updated!');
+        return redirect("/chirps/$foundChirp->id/edit")->with('success', 'Chirp updated!');
     }
 
     /**
