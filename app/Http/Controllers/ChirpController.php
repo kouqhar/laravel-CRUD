@@ -64,17 +64,17 @@ class ChirpController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
-    {
-        $foundChirp = Chirp::find($id);
 
-        return view('chirps.edit', ['chirp' => $foundChirp]);
+    // Using Route model binding
+    public function edit(Chirp $chirp)
+    {
+        return view('chirps.edit', compact('chirp'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Chirp $chirp)
     {
         $validated = $request->validate([
             'message' => 'required|string|max:255|min:3',
@@ -83,20 +83,19 @@ class ChirpController extends Controller
             'message.max' => 'Chirps must be 255 characters or less.',
         ]);
 
-        $foundChirp = Chirp::find($id);
-        $foundChirp->update([
-            'message' => $validated['message'],
-        ]);
+        $chirp->update($validated);
 
-        return redirect("/chirps/$foundChirp->id/edit")->with('success', 'Chirp updated!');
+        echo $chirp;
+
+        return redirect("/chirps/{$chirp['id']}/edit")->with('success', 'Chirp updated!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Chirp $chirp)
     {
-        Chirp::find($id)->delete();
+        $chirp->delete();
 
         return redirect('/')->with('success', 'Chirp deleted!');
     }
