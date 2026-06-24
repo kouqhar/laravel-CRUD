@@ -37,6 +37,8 @@ Route::post('/logout', Logout::class)
 ->middleware('auth')->name('logout');
 
 
+// User Profile
+Route::view('/profile', 'profile')->middleware('auth')->name('profile');
 
 Route::get('/about', function(){
     return view('about');
