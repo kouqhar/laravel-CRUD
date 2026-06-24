@@ -1,17 +1,42 @@
 <?php
 
 use App\Http\Controllers\ChirpController;
+use App\Http\Controllers\Auth\Register;
+use App\Http\Controllers\Auth\Logout;
+use App\Http\Controllers\Auth\Login;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [ChirpController::class, "index"]);
 
-Route::post('/chirps', [ChirpController::class, "store"]);
+Route::middleware('auth')->group(function () {
+    Route::post('/chirps', [ChirpController::class, "store"]);
 
 // Edit
-Route::get('/chirps/{chirp}/edit', [ChirpController::class, "edit"]);
-Route::put('/chirps/{chirp}', [ChirpController::class, "update"]);
+    Route::get('/chirps/{chirp}/edit', [ChirpController::class, "edit"]);
+    Route::put('/chirps/{chirp}', [ChirpController::class, "update"]);
+    Route::delete('/chirps/{chirp}', [ChirpController::class, "destroy"]);
+});
 
-Route::delete('/chirps/{chirp}', [ChirpController::class, "destroy"]);
+
+
+// Auth routes
+
+//Register Route
+Route::view('/register', 'auth.register')
+    ->middleware('guest')
+    ->name('register');
+Route::post('/register', Register::class);
+
+// Login Route
+Route::view('/login', 'auth.login')
+->middleware('guest')->name('login');
+Route::post('/login', Login::class)->middleware('guest');
+
+// Logout
+Route::post('/logout', Logout::class)
+->middleware('auth')->name('logout');
+
+
 
 Route::get('/about', function(){
     return view('about');

@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Chirp;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
 class ChirpController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
@@ -45,10 +47,7 @@ class ChirpController extends Controller
         ]);
 
         // Create the chirp
-        Chirp::create([
-            'message' => $validated['message'],
-//            'user_id' => null,
-        ]);
+        auth()->user()->chirps()->create($validated);
 
         return redirect('/')->with('success', 'Chirp created!');
     }
@@ -68,6 +67,8 @@ class ChirpController extends Controller
     // Using Route model binding
     public function edit(Chirp $chirp)
     {
+        $this->authorize('view', $chirp);
+
         return view('chirps.edit', compact('chirp'));
     }
 
@@ -76,6 +77,8 @@ class ChirpController extends Controller
      */
     public function update(Request $request, Chirp $chirp)
     {
+        $this->authorize('update', $chirp);
+
         $validated = $request->validate([
             'message' => 'required|string|max:255|min:3',
         ], [
@@ -95,6 +98,8 @@ class ChirpController extends Controller
      */
     public function destroy(Chirp $chirp)
     {
+        $this->authorize('delete', $chirp);
+
         $chirp->delete();
 
         return redirect('/')->with('success', 'Chirp deleted!');
