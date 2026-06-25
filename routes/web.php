@@ -1,12 +1,13 @@
 <?php
 
 use App\Http\Controllers\ChirpController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\Register;
 use App\Http\Controllers\Auth\Logout;
 use App\Http\Controllers\Auth\Login;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [ChirpController::class, "index"]);
+Route::get('/', [ChirpController::class, "index"])->name("home");
 
 Route::middleware('auth')->group(function () {
     Route::post('/chirps', [ChirpController::class, "store"]);
@@ -38,7 +39,8 @@ Route::post('/logout', Logout::class)
 
 
 // User Profile
-Route::view('/profile', 'pages.profile')->middleware('auth')->name('profile');
+//Route::view('/profile', 'pages.profile')->middleware('auth')->name('profile');
+Route::get('/profile', [ProfileController::class, "index"])->middleware('auth')->name('profile');
 
 Route::get('/about', function(){
     return view('about');

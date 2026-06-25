@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chirp;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
